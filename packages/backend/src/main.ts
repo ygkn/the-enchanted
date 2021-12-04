@@ -1,11 +1,16 @@
-import { WebSocketServer, WebSocket } from "ws";
 import { certificateFor } from "devcert";
-import { createServer } from "https";
+import { createServer } from "http";
+import { createServer as createServerTLS } from "https";
+import { WebSocket, WebSocketServer } from "ws";
 
 const main = async () => {
-  const listeners: Set<WebSocket> = new Set();
+  const listeners = new Set<WebSocket>();
 
-  const server = createServer(await certificateFor("localhost"));
+  const server =
+    process.env.NODE_ENV === "production"
+      ? createServer()
+      : createServerTLS(await certificateFor("localhost"));
+
   const wss = new WebSocketServer({ server });
 
   wss.on("error", console.log);
@@ -30,7 +35,10 @@ const main = async () => {
     });
   });
 
-  server.listen(8080);
+  server.listen(
+    parseInt(process.env.PORT ?? "8080"),
+    process.env.HOST ?? "0.0.0.0"
+  );
 };
 
 main();
