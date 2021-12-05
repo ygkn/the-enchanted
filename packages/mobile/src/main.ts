@@ -56,3 +56,7 @@ startButton.addEventListener("click", async () => {
     });
   }
 });
+
+setInterval(() => {
+  socket.send(JSON.stringify({ type: "ping" }));
+}, 1000);
