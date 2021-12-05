@@ -30,7 +30,7 @@ export const WorkSwitcher: VFC = () => {
   return (
     <Canvas>
       <ambientLight />
-      <PerspectiveCamera args={[45]} makeDefault position={[0, 0, 0]}>
+      <PerspectiveCamera args={[90]} makeDefault position={[0, 0, 0]}>
         <WorkComponent />
       </PerspectiveCamera>
     </Canvas>

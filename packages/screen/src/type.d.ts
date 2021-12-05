@@ -1,3 +1,4 @@
 interface Window {
-  deviceCoords: { x: number; y: number };
+  deviceCoords: THREE.Vector2;
+  isDebug: boolean;
 }

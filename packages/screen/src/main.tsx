@@ -1,4 +1,5 @@
 import ReactDOM from "react-dom";
+import { Vector2 } from "three";
 import { WorkSwitcher } from "./component/WorkSwitcher";
 
 const socket = new WebSocket(`wss://the-enchanted-server.herokuapp.com`);
@@ -7,7 +8,11 @@ function getTanDeg(deg: number) {
   return Math.tan((deg * Math.PI) / 180);
 }
 
-window.deviceCoords = { x: 0, y: 0 };
+if (typeof window.isDebug === "undefined") {
+  window.isDebug = false;
+}
+
+window.deviceCoords = new Vector2();
 
 type Orientation = {
   alpha: number;
@@ -40,13 +45,9 @@ socket.addEventListener("message", async (event) => {
     typeof event.data === "string" ? event.data : await event.data.text();
   const jsonObject: MessageObject = JSON.parse(text);
 
-  console.log(jsonObject);
-
   if (jsonObject.type === "orientation") {
-    window.deviceCoords = {
-      x: -4 * getTanDeg(jsonObject.payload.alpha),
-      y: 4 * getTanDeg(jsonObject.payload.beta),
-    };
+    window.deviceCoords.x = getTanDeg(jsonObject.payload.alpha) / -2;
+    window.deviceCoords.y = getTanDeg(jsonObject.payload.beta) / 2;
   }
 });
 
