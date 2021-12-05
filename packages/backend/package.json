@@ -5,6 +5,7 @@
   "dependencies": {
     "devcert": "^1.2.0",
     "express": "^4.17.1",
+    "nanoid": "^3.1.30",
     "ws": "^8.3.0"
   },
   "devDependencies": {
