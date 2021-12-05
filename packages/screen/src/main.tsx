@@ -1,10 +1,13 @@
-import * as THREE from "three";
 import ReactDOM from "react-dom";
-import { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Icosahedron, PerspectiveCamera } from "@react-three/drei";
+import { WorkSwitcher } from "./component/WorkSwitcher";
 
 const socket = new WebSocket(`wss://the-enchanted-server.herokuapp.com`);
+
+function getTanDeg(deg: number) {
+  return Math.tan((deg * Math.PI) / 180);
+}
+
+window.deviceCoords = { x: 0, y: 0 };
 
 type Orientation = {
   alpha: number;
@@ -12,11 +15,16 @@ type Orientation = {
   gamma: number;
 };
 
-function getTanDeg(deg: number) {
-  return Math.tan((deg * Math.PI) / 180);
-}
-
-let deviceOrientation: Orientation = { alpha: 0, beta: 0, gamma: 0 };
+type MessageObject =
+  | {
+      type: "orientation";
+      uid: string;
+      payload: Orientation;
+    }
+  | {
+      type: "disconnect";
+      uid: string;
+    };
 
 socket.addEventListener("open", function () {
   console.log("connect");
@@ -27,31 +35,19 @@ socket.addEventListener("open", function () {
   );
 });
 
-socket.addEventListener("message", async function (event) {
-  deviceOrientation = JSON.parse(await event.data.text()).payload;
-  console.log(deviceOrientation);
+socket.addEventListener("message", async (event) => {
+  const text =
+    typeof event.data === "string" ? event.data : await event.data.text();
+  const jsonObject: MessageObject = JSON.parse(text);
+
+  console.log(jsonObject);
+
+  if (jsonObject.type === "orientation") {
+    window.deviceCoords = {
+      x: -4 * getTanDeg(jsonObject.payload.alpha),
+      y: 4 * getTanDeg(jsonObject.payload.beta),
+    };
+  }
 });
 
-function Box() {
-  const mesh = useRef<THREE.Mesh>(null!);
-  useFrame(() => {
-    mesh.current.position.x = -4 * getTanDeg(deviceOrientation.alpha);
-    mesh.current.position.y = 4 * getTanDeg(deviceOrientation.beta);
-  });
-
-  return (
-    <PerspectiveCamera args={[45]} makeDefault position={[0, 0, 0]}>
-      <Icosahedron ref={mesh} position={[0, 0, -10]}>
-        <meshStandardMaterial color="#fff" wireframe />
-      </Icosahedron>
-    </PerspectiveCamera>
-  );
-}
-
-ReactDOM.render(
-  <Canvas>
-    <ambientLight />
-    <Box />
-  </Canvas>,
-  document.getElementById("root")
-);
+ReactDOM.render(<WorkSwitcher />, document.getElementById("root"));
