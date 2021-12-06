@@ -17,6 +17,7 @@
   "dependencies": {
     "@react-three/drei": "^7.25.4",
     "@react-three/fiber": "^7.0.21",
+    "nanoid": "^3.1.30",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "three": "^0.135.0"

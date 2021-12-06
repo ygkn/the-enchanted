@@ -1,10 +1,10 @@
 import { PerspectiveCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useEffect, useState, VFC } from "react";
-import { Hoge } from "./works/Hoge";
+import { Sparkle } from "./works/Sparkle";
 import { Pointer } from "./works/Pointer";
 
-const Works = [Pointer, Hoge];
+const Works = [Pointer, Sparkle];
 
 export const WorkSwitcher: VFC = () => {
   const [workIndex, setWorkIndex] = useState<number>(0);

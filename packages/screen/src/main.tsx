@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ReactDOM from "react-dom";
 import { Vector2 } from "three";
 import { WorkSwitcher } from "./component/WorkSwitcher";
@@ -51,4 +52,9 @@ socket.addEventListener("message", async (event) => {
   }
 });
 
-ReactDOM.render(<WorkSwitcher />, document.getElementById("root"));
+ReactDOM.render(
+  <Suspense fallback={<></>}>
+    <WorkSwitcher />
+  </Suspense>,
+  document.getElementById("root")
+);
