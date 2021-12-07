@@ -6,7 +6,14 @@ type Orientation = {
   gamma: number;
 };
 
-const socket = new WebSocket(`wss://the-enchanted-server.herokuapp.com`);
+const searchParams = new URLSearchParams(location.search);
+const useDevServer = searchParams.get("dev-server") === "true";
+
+const socket = new WebSocket(
+  useDevServer
+    ? `wss://${location.hostname}:8080`
+    : `wss://the-enchanted-server.herokuapp.com`
+);
 
 const orientationKey = ["alpha", "beta", "gamma"] as const;
 

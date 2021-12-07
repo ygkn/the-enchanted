@@ -6,6 +6,11 @@ const mousePosition: Vector2 = new Vector2();
 const windowSize: Vector2 = new Vector2(window.innerWidth, window.innerHeight);
 const mouseCoords: Vector2 = new Vector2();
 
+const searchParams = new URLSearchParams(location.search);
+
+const useMouse = searchParams.get("mouse") === "true";
+const useDevServer = searchParams.get("dev-server") === "true";
+
 const updateMouseCoords = () => {
   mouseCoords.set(
     mousePosition.x / windowSize.x - 0.5,
@@ -32,7 +37,7 @@ type MessageObject =
 
 export const getWordPointerPosition = (depth: number): Vector2 => {
   const position = new Vector2();
-  position.copy(window.isDebug ? mouseCoords : deviceCoords);
+  position.copy(useMouse ? mouseCoords : deviceCoords);
 
   position.x *= depth;
   position.y *= depth;
@@ -45,7 +50,11 @@ function getTanDeg(deg: number) {
 }
 
 export const listen = () => {
-  const socket = new WebSocket(`https://the-enchanted-server.herokuapp.com`);
+  const socket = new WebSocket(
+    useDevServer
+      ? `wss://${location.hostname}:8080`
+      : `wss://the-enchanted-server.herokuapp.com`
+  );
 
   socket.addEventListener("open", function () {
     console.log("connect");
