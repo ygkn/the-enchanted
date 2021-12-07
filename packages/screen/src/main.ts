@@ -2,10 +2,6 @@ import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { listen } from "./pointer";
 import { WorkSwitcher } from "./WorkSwitcher";
 
-if (typeof window.isDebug === "undefined") {
-  window.isDebug = false;
-}
-
 listen();
 
 const renderer = new WebGLRenderer({
