@@ -1,4 +1,4 @@
-import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { listen } from "./pointer";
 import { WorkSwitcher } from "./WorkSwitcher";
 
@@ -15,9 +15,6 @@ camera.position.set(0, 0, 0);
 
 const workSwitcher = new WorkSwitcher();
 scene.add(workSwitcher.root);
-
-const light = new AmbientLight();
-scene.add(light);
 
 const tick = (timestamp: number) => {
   workSwitcher.update(timestamp);

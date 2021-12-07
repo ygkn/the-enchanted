@@ -1,4 +1,10 @@
-import { Group, Mesh, MeshStandardMaterial, SphereGeometry } from "three";
+import {
+  AmbientLight,
+  Group,
+  Mesh,
+  MeshStandardMaterial,
+  SphereGeometry,
+} from "three";
 import { getWordPointerPosition } from "../pointer";
 import { Work } from "./types";
 
@@ -9,6 +15,9 @@ export class Pointer extends Work {
   constructor() {
     super();
     this.root = new Group();
+
+    const light = new AmbientLight();
+    this.root.add(light);
 
     const geometry = new SphereGeometry(1, 5, 5);
 

@@ -1,4 +1,5 @@
 import {
+  AmbientLight,
   Group,
   Sprite,
   SpriteMaterial,
@@ -26,6 +27,10 @@ export class Sparkle extends Work {
   constructor() {
     super();
     this.root = new Group();
+
+    const light = new AmbientLight();
+    this.root.add(light);
+
     this.map = new TextureLoader().load(sparkleImageUrl);
     this.material = new SpriteMaterial({ map: this.map });
     this.sparkles = [];
