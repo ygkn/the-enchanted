@@ -1,0 +1,75 @@
+import {
+  Group,
+  Sprite,
+  SpriteMaterial,
+  Texture,
+  TextureLoader,
+  Vector2,
+} from "three";
+import { getWordPointerPosition } from "../pointer";
+import sparkleImageUrl from "../images/sparkle.png";
+import { Work } from "./types";
+
+export class Sparkle extends Work {
+  root: Group;
+  map: Texture;
+  sparkles: {
+    createdPosition: Vector2;
+    createdAt: number;
+    sprite: Sprite;
+  }[];
+  material: SpriteMaterial;
+
+  nextCreationTime: number;
+  lastPointerPosition: Vector2;
+
+  constructor() {
+    super();
+    this.root = new Group();
+    this.map = new TextureLoader().load(sparkleImageUrl);
+    this.material = new SpriteMaterial({ map: this.map });
+    this.sparkles = [];
+
+    this.nextCreationTime = performance.now();
+    this.lastPointerPosition = getWordPointerPosition(10);
+  }
+
+  update(timestamp: number) {
+    const nowPointerPosition = getWordPointerPosition(10);
+
+    if (
+      this.nextCreationTime < timestamp &&
+      nowPointerPosition.distanceTo(this.lastPointerPosition) > 0.1
+    ) {
+      const createdPosition = new Vector2();
+      createdPosition.copy(nowPointerPosition);
+
+      createdPosition.x += Math.random();
+      createdPosition.y += Math.random();
+
+      const sprite = new Sprite(this.material);
+      sprite.position.set(createdPosition.x, createdPosition.y, -10);
+      this.root.add(sprite);
+
+      this.sparkles.push({
+        createdAt: timestamp,
+        createdPosition,
+        sprite,
+      });
+
+      this.nextCreationTime = timestamp + 100 + Math.random() * 500;
+      this.lastPointerPosition.copy(nowPointerPosition);
+    }
+
+    for (const sparkle of this.sparkles) {
+      const elapsed = (timestamp - sparkle.createdAt) / 500;
+
+      const scaleRate = Math.max(0, 1 - (elapsed - 1) ** 2) * 2;
+
+      sparkle.sprite.scale.x = scaleRate;
+      sparkle.sprite.scale.y = scaleRate;
+    }
+  }
+
+  dispose() {}
+}
