@@ -2,9 +2,10 @@ import { Sparkle } from "./works/Sparkle";
 import { Pointer } from "./works/Pointer";
 import { Koki1 } from "./works/Koki1";
 import { Work } from "./works/types";
+import { Rose } from "./works/Rose";
 import { Group, Object3D } from "three";
 
-const Works = [Pointer, Sparkle, Koki1];
+const Works = [Pointer, Sparkle, Koki1, Rose];
 
 export class WorkSwitcher extends Work {
   root: Object3D;
