@@ -7,6 +7,7 @@ import {
   Material,
   Mesh,
   MeshLambertMaterial,
+  PointLight,
   SphereGeometry,
   TorusGeometry,
 } from "three";
@@ -14,57 +15,72 @@ import { getWordPointerPosition } from "../pointer";
 import { Work } from "./types";
 
 const geometries = [
-  new TorusGeometry(1, 0.5, 16, 100),
-  new SphereGeometry(),
-  new ConeGeometry(0.75, 2, 16, 50),
-  new BoxGeometry(),
+  new TorusGeometry(0.5, 0.25, 16, 100),
+  new SphereGeometry(0.5),
+  new ConeGeometry(0.3, 1, 16, 50),
+  new BoxGeometry(0.5, 0.5, 0.5),
 ];
 
 export class Koki1 extends Work {
   root: Group;
-  spheres: Mesh[];
+  meshes: Mesh[];
+  pointer: PointLight;
   geometry: TorusGeometry;
   material: Material;
 
   constructor() {
     super();
     this.root = new Group();
-    this.root.add(new AmbientLight(0xffffff, 0.5));
-    const light = new DirectionalLight(0xffffff, 1);
+    this.root.add(new AmbientLight(0xffffff, 0.3));
+    const light = new DirectionalLight(0xffffff, 1.0);
     light.castShadow = true;
     this.root.add(light);
     this.material = new MeshLambertMaterial({
       color: 0x9841f0,
     });
     this.geometry = new TorusGeometry(1, 0.5, 16, 100);
-    this.spheres = [];
-    for (let i = 0; i < 18; i++) {
-      this.spheres.push(
+    this.meshes = [];
+
+    //球の数,行数,列
+    const numofmeshes = 28;
+    const numofline = 4;
+    const numofcolumn = Math.floor(numofmeshes / numofline);
+
+    for (let i = 0; i < numofmeshes; i++) {
+      this.meshes.push(
         new Mesh(
           geometries[Math.floor(Math.random() * geometries.length)],
           this.material
         )
       );
-      this.spheres[i].position.x = 5 * ((i % 6) - 2.5);
-      this.spheres[i].position.y = 5 * (Math.floor(i / 6) - 1);
-      this.spheres[i].position.z = -10;
-      this.root.add(this.spheres[i]);
+      this.meshes[i].position.x =
+        5 * ((i % numofcolumn) - (numofcolumn - 1) / 2);
+      this.meshes[i].position.y =
+        4 * (Math.floor(i / numofcolumn) - numofline / 2 + 0.5);
+      this.meshes[i].position.z = -17;
+      this.root.add(this.meshes[i]);
     }
+    //ポインター
+    this.pointer = new PointLight(0xea9198, 2, 10, 1.0);
+    this.pointer.position.z = -5;
+    this.root.add(this.pointer);
   }
 
   update() {
-    const pointerPosition = getWordPointerPosition(10);
-    for (const sphere of this.spheres) {
+    const pointerPosition = getWordPointerPosition(17);
+    this.pointer.position.x = pointerPosition.x;
+    this.pointer.position.y = pointerPosition.y;
+    for (const meshe of this.meshes) {
       const distance = Math.sqrt(
-        (pointerPosition.x - sphere.position.x) ** 2 +
-          (pointerPosition.y - sphere.position.y) ** 2
+        (pointerPosition.x - meshe.position.x) ** 2 +
+          (pointerPosition.y - meshe.position.y) ** 2
       );
-      const scaleRate = Math.max(1, 2 - distance / 8);
-      sphere.scale.x = scaleRate;
-      sphere.scale.y = scaleRate;
-      sphere.scale.z = scaleRate;
+      const scaleRate = Math.max(1, 4 - distance / 2);
+      meshe.scale.x = scaleRate;
+      meshe.scale.y = scaleRate;
+      meshe.scale.z = scaleRate;
 
-      sphere.rotation.x = sphere.rotation.y =
+      meshe.rotation.x = meshe.rotation.y =
         (Math.max(0, 8 - Math.abs(distance)) / 8) * 2 * Math.PI;
     }
   }
