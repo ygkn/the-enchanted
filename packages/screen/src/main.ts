@@ -10,7 +10,7 @@ const renderer = new WebGLRenderer({
 
 const scene = new Scene();
 
-const camera = new PerspectiveCamera(90);
+const camera = new PerspectiveCamera(60);
 camera.position.set(0, 0, 0);
 
 const workSwitcher = new WorkSwitcher();
