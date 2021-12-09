@@ -62,7 +62,7 @@ export class Sparkle extends Work {
         sprite,
       });
 
-      this.nextCreationTime = timestamp + 100 + Math.random() * 500;
+      this.nextCreationTime = timestamp + 100 + Math.random() * 100;
       this.lastPointerPosition.copy(nowPointerPosition);
     }
 
