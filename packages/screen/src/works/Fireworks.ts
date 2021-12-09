@@ -109,7 +109,7 @@ export class Fireworks extends Work {
       trails,
       maxRadius: MathUtils.randFloat(1, 2),
       createdPosition: new Vector3(
-        MathUtils.randFloat(0, 5),
+        MathUtils.randFloatSpread(10),
         MathUtils.randFloat(0, 5),
         -10
       ),
