@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { Fog, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { listen } from "./pointer";
 import { WorkSwitcher } from "./WorkSwitcher";
 
@@ -9,6 +9,8 @@ const renderer = new WebGLRenderer({
 });
 
 const scene = new Scene();
+
+scene.fog = new Fog(0x000000, 1, 500);
 
 const camera = new PerspectiveCamera(60);
 camera.position.set(0, 0, 0);
