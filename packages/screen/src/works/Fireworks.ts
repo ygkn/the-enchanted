@@ -198,7 +198,28 @@ export class Fireworks extends Work {
     }
   }
 
-  dispose() {}
+  dispose() {
+    for (const firework of this.fireWorks) {
+      firework.stars.geometry.dispose();
+      firework.trails.geometry.dispose();
+
+      if (Array.isArray(firework.stars.material)) {
+        for (const material of firework.stars.material) {
+          material.dispose();
+        }
+      } else {
+        firework.stars.material.dispose();
+      }
+
+      if (Array.isArray(firework.trails.material)) {
+        for (const material of firework.trails.material) {
+          material.dispose();
+        }
+      } else {
+        firework.trails.material.dispose();
+      }
+    }
+  }
 }
 
 const getPointsPosition = (
