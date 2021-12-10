@@ -81,6 +81,8 @@ export class Fireworks extends Work {
   }
 
   addFirework(timestamp: number) {
+    const soundeffect = new Audio("/audio/fireworksSE.mp3");
+    soundeffect.play();
     const starGeometry = new BufferGeometry();
 
     starGeometry.setAttribute(
