@@ -26,8 +26,6 @@ export class WorkSwitcher extends Work {
     };
 
     document.addEventListener("keydown", this.handleKeydown);
-
-    this.goNextWork();
   }
 
   goNextWork() {
