@@ -20,6 +20,7 @@ export class Sparkle extends Work {
     sprite: Sprite;
   }[];
   material: SpriteMaterial;
+  soundEffect: HTMLAudioElement;
 
   nextCreationTime: number;
   lastPointerPosition: Vector2;
@@ -37,10 +38,18 @@ export class Sparkle extends Work {
 
     this.nextCreationTime = performance.now();
     this.lastPointerPosition = getWordPointerPosition(10);
+    this.soundEffect = new Audio("/audio/sparkleSE.mp3");
   }
 
   update(timestamp: number) {
     const nowPointerPosition = getWordPointerPosition(10);
+    if (
+      nowPointerPosition.distanceTo(this.lastPointerPosition) > 0.2 &&
+      this.soundEffect.paused
+    ) {
+      this.soundEffect.currentTime = 0;
+      this.soundEffect.play();
+    }
 
     if (
       this.nextCreationTime < timestamp &&
