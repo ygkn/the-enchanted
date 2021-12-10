@@ -3,7 +3,6 @@ import {
   Group,
   Sprite,
   SpriteMaterial,
-  Texture,
   TextureLoader,
   Vector2,
 } from "three";
@@ -11,15 +10,16 @@ import { getWordPointerPosition } from "../pointer";
 import sparkleImageUrl from "../images/sparkle.png";
 import { Work } from "./types";
 
+const map = new TextureLoader().load(sparkleImageUrl);
+const material = new SpriteMaterial({ map });
+
 export class Sparkle extends Work {
   root: Group;
-  map: Texture;
-  sparkles: {
+  sparkles: Set<{
     createdPosition: Vector2;
     createdAt: number;
     sprite: Sprite;
-  }[];
-  material: SpriteMaterial;
+  }>;
   soundEffect: HTMLAudioElement;
 
   nextCreationTime: number;
@@ -32,9 +32,7 @@ export class Sparkle extends Work {
     const light = new AmbientLight();
     this.root.add(light);
 
-    this.map = new TextureLoader().load(sparkleImageUrl);
-    this.material = new SpriteMaterial({ map: this.map });
-    this.sparkles = [];
+    this.sparkles = new Set();
 
     this.nextCreationTime = performance.now();
     this.lastPointerPosition = getWordPointerPosition(10);
@@ -61,11 +59,11 @@ export class Sparkle extends Work {
       createdPosition.x += Math.random();
       createdPosition.y += Math.random();
 
-      const sprite = new Sprite(this.material);
+      const sprite = new Sprite(material);
       sprite.position.set(createdPosition.x, createdPosition.y, -10);
       this.root.add(sprite);
 
-      this.sparkles.push({
+      this.sparkles.add({
         createdAt: timestamp,
         createdPosition,
         sprite,
@@ -75,13 +73,20 @@ export class Sparkle extends Work {
       this.lastPointerPosition.copy(nowPointerPosition);
     }
 
+    const max = 1000 * 2;
+
     for (const sparkle of this.sparkles) {
-      const elapsed = (timestamp - sparkle.createdAt) / 500;
+      const elapsed = (timestamp - sparkle.createdAt) / max;
 
       const scaleRate = Math.max(0, 1 - (elapsed - 1) ** 2) * 2;
 
       sparkle.sprite.scale.x = scaleRate;
       sparkle.sprite.scale.y = scaleRate;
+
+      if (elapsed > 1) {
+        this.root.remove(sparkle.sprite);
+        this.sparkles.delete(sparkle);
+      }
     }
   }
 
