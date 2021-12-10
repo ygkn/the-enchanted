@@ -4,7 +4,6 @@ import {
   ConeGeometry,
   DirectionalLight,
   Group,
-  Material,
   Mesh,
   MeshLambertMaterial,
   PointLight,
@@ -22,12 +21,14 @@ const geometries = [
   new BoxGeometry(0.5, 0.5, 0.5),
 ];
 
+const material = new MeshLambertMaterial({
+  color: 0x9841f0,
+});
+
 export class Koki1 extends Work {
   root: Group;
   meshes: Mesh[];
   pointer: PointLight;
-  geometry: TorusGeometry;
-  material: Material;
   soundEffect: HTMLAudioElement;
   lastPointerPosition: Vector2;
 
@@ -38,10 +39,6 @@ export class Koki1 extends Work {
     const light = new DirectionalLight(0xffffff, 1.0);
     light.castShadow = true;
     this.root.add(light);
-    this.material = new MeshLambertMaterial({
-      color: 0x9841f0,
-    });
-    this.geometry = new TorusGeometry(1, 0.5, 16, 100);
     this.meshes = [];
 
     //球の数,行数,列
@@ -53,7 +50,7 @@ export class Koki1 extends Work {
       this.meshes.push(
         new Mesh(
           geometries[Math.floor(Math.random() * geometries.length)],
-          this.material
+          material
         )
       );
       this.meshes[i].position.x =
