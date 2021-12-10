@@ -23,45 +23,35 @@ socket.addEventListener("open", function () {
   console.log("connect");
 });
 
-function getTanDeg(deg: number) {
-  return Math.tan((deg * Math.PI) / 180);
-}
-
-const position = document.querySelector<HTMLElement>(".position")!;
 const startButton = document.querySelector<HTMLButtonElement>(".start-button")!;
-
-let listening = false;
 
 let positionZeroAlpha: number | null = null;
 
 startButton.addEventListener("click", async () => {
   positionZeroAlpha = null;
 
-  if (!listening) {
-    await requestPermission();
-    window.addEventListener("deviceorientation", (event) => {
-      if (positionZeroAlpha === null) {
-        positionZeroAlpha = event.alpha;
-      }
+  await requestPermission();
 
-      const serializedOrientation: Orientation = {
-        alpha: event.alpha! - positionZeroAlpha!,
-        beta: event.beta!,
-        gamma: event.gamma!,
-      };
+  startButton.classList.add("started");
 
-      position.innerText = `(${
-        -1 * getTanDeg(event.alpha! - positionZeroAlpha!)
-      },${getTanDeg(event.beta!)})`;
+  window.addEventListener("deviceorientation", (event) => {
+    if (positionZeroAlpha === null) {
+      positionZeroAlpha = event.alpha;
+    }
 
-      socket.send(
-        JSON.stringify({
-          type: "broadcast",
-          payload: serializedOrientation,
-        })
-      );
-    });
-  }
+    const serializedOrientation: Orientation = {
+      alpha: event.alpha! - positionZeroAlpha!,
+      beta: event.beta!,
+      gamma: event.gamma!,
+    };
+
+    socket.send(
+      JSON.stringify({
+        type: "broadcast",
+        payload: serializedOrientation,
+      })
+    );
+  });
 });
 
 setInterval(() => {
