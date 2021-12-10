@@ -120,5 +120,7 @@ export class EscapingParticle extends Work {
     this.dots.geometry.attributes.position.needsUpdate = true;
   }
 
-  dispose() {}
+  dispose() {
+    this.dots.geometry.dispose();
+  }
 }
