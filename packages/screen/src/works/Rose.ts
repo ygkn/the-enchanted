@@ -18,11 +18,11 @@ import texture from "../images/rose-texture.png";
 export class Rose extends Work {
   root: Group;
   map: Texture;
-  particles: {
+  particles: Set<{
     createdPosition: Vector2;
     createdAt: number;
     mesh: Points;
-  }[];
+  }>;
   geometry: BufferGeometry;
 
   nextCreationTime: number;
@@ -50,7 +50,7 @@ export class Rose extends Work {
 
     this.nextCreationTime = performance.now();
     this.lastPointerPosition = getWordPointerPosition(30);
-    this.particles = [];
+    this.particles = new Set();
   }
 
   update(timestamp: number) {
@@ -79,7 +79,7 @@ export class Rose extends Work {
       this.root.add(rose);
       const soundeffect = new Audio("/audio/roseSE.mp3");
       soundeffect.play();
-      this.particles.push({
+      this.particles.add({
         createdAt: timestamp,
         createdPosition,
         mesh: rose,
@@ -98,13 +98,31 @@ export class Rose extends Work {
       particle.mesh.scale.y = scaleRate;
       if (timestamp - particle.createdAt >= 1000) {
         this.root.remove(particle.mesh);
+        this.particles.delete(particle);
+
+        if (Array.isArray(particle.mesh.material)) {
+          for (const material of particle.mesh.material) {
+            material.dispose();
+          }
+        } else {
+          particle.mesh.material.dispose();
+        }
       }
     }
-
-    this.particles = this.particles.filter(
-      (mesh) => timestamp - mesh.createdAt <= 1000
-    );
   }
 
-  dispose() {}
+  dispose() {
+    for (const particle of this.particles) {
+      this.root.remove(particle.mesh);
+      this.particles.delete(particle);
+
+      if (Array.isArray(particle.mesh.material)) {
+        for (const material of particle.mesh.material) {
+          material.dispose();
+        }
+      } else {
+        particle.mesh.material.dispose();
+      }
+    }
+  }
 }
