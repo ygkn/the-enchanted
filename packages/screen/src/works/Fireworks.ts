@@ -9,7 +9,6 @@ import {
   Points,
   PointsMaterial,
   TextureLoader,
-  Vector2,
   Vector3,
 } from "three";
 import { getWordPointerPosition } from "../pointer";

@@ -77,7 +77,8 @@ export class Rose extends Work {
       const rose = new Points(this.geometry, material);
       rose.position.set(createdPosition.x, createdPosition.y, -50);
       this.root.add(rose);
-
+      const soundeffect = new Audio("/audio/roseSE.mp3");
+      soundeffect.play();
       this.particles.push({
         createdAt: timestamp,
         createdPosition,
