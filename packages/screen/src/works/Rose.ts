@@ -2,6 +2,7 @@ import {
   AdditiveBlending,
   AmbientLight,
   BufferGeometry,
+  Color,
   Float32BufferAttribute,
   Group,
   Points,
@@ -23,7 +24,6 @@ export class Rose extends Work {
     mesh: Points;
   }[];
   geometry: BufferGeometry;
-  material: PointsMaterial;
 
   nextCreationTime: number;
   lastPointerPosition: Vector2;
@@ -42,14 +42,6 @@ export class Rose extends Work {
       const y = 5 * (1 + Math.cos((7 / 8) * dot * i)) * Math.sin(dot * i);
       vertices.push(x, y, -30);
     }
-    this.material = new PointsMaterial({
-      size: 1,
-      color: 0x9841f0,
-      alphaMap: this.map,
-      transparent: true,
-      opacity: 0.6,
-      blending: AdditiveBlending,
-    });
     this.geometry = new BufferGeometry();
     this.geometry.setAttribute(
       "position",
@@ -74,7 +66,15 @@ export class Rose extends Work {
       createdPosition.x += Math.random();
       createdPosition.y += Math.random();
 
-      const rose = new Points(this.geometry, this.material);
+      const material = new PointsMaterial({
+        size: 1,
+        color: new Color().setHSL((timestamp % 2000) / 2000, 1, 0.5),
+        alphaMap: this.map,
+        transparent: true,
+        opacity: 0.6,
+        blending: AdditiveBlending,
+      });
+      const rose = new Points(this.geometry, material);
       rose.position.set(createdPosition.x, createdPosition.y, -50);
       this.root.add(rose);
 
