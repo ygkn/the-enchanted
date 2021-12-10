@@ -3,6 +3,7 @@ import {
   AmbientLight,
   BufferAttribute,
   BufferGeometry,
+  Color,
   Float32BufferAttribute,
   Group,
   MathUtils,
@@ -35,26 +36,6 @@ starAngles.push({
 
 const texture = new TextureLoader().load(fireworksAlphaTextureImage);
 
-const starMaterial = new PointsMaterial({
-  blending: AdditiveBlending,
-  color: 0xff8822,
-  size: 0.5,
-  alphaMap: texture,
-  map: texture,
-  transparent: true,
-  opacity: 0.5,
-});
-
-const trailMaterial = new PointsMaterial({
-  blending: AdditiveBlending,
-  color: 0xff2222,
-  size: 0.1,
-  alphaMap: texture,
-  map: texture,
-  transparent: true,
-  opacity: 0.5,
-});
-
 export class Fireworks extends Work {
   root: Group;
 
@@ -81,7 +62,21 @@ export class Fireworks extends Work {
   }
 
   addFirework(timestamp: number) {
+    const soundeffect = new Audio("/audio/fireworksSE.mp3");
+    soundeffect.play();
+
+    const hue = MathUtils.randFloat(0, 1);
+
     const starGeometry = new BufferGeometry();
+    const starMaterial = new PointsMaterial({
+      blending: AdditiveBlending,
+      color: new Color().setHSL(hue + 0.25 - Math.floor(hue + 0.25), 0.5, 0.8),
+      size: 0.5,
+      alphaMap: texture,
+      map: texture,
+      transparent: true,
+      opacity: 0.5,
+    });
 
     starGeometry.setAttribute(
       "position",
@@ -94,6 +89,15 @@ export class Fireworks extends Work {
     const stars = new Points(starGeometry, starMaterial);
 
     const trailGeometry = new BufferGeometry();
+    const trailMaterial = new PointsMaterial({
+      blending: AdditiveBlending,
+      color: new Color().setHSL(hue, 0.5, 0.5),
+      size: 0.1,
+      alphaMap: texture,
+      map: texture,
+      transparent: true,
+      opacity: 0.5,
+    });
 
     trailGeometry.setAttribute(
       "position",
@@ -140,6 +144,22 @@ export class Fireworks extends Work {
         this.root.remove(firework.stars, firework.trails);
         firework.stars.geometry.dispose();
         firework.trails.geometry.dispose();
+
+        if (Array.isArray(firework.stars.material)) {
+          for (const material of firework.stars.material) {
+            material.dispose();
+          }
+        } else {
+          firework.stars.material.dispose();
+        }
+
+        if (Array.isArray(firework.trails.material)) {
+          for (const material of firework.trails.material) {
+            material.dispose();
+          }
+        } else {
+          firework.trails.material.dispose();
+        }
       }
 
       (firework.stars.geometry.attributes.position as BufferAttribute).set(
@@ -150,7 +170,8 @@ export class Fireworks extends Work {
         )
       );
 
-      (firework.stars.material as PointsMaterial).size = (1 - proceedRate) / 5;
+      (firework.stars.material as PointsMaterial).size =
+        Math.sin(proceedRate * Math.PI) / 5;
 
       firework.stars.geometry.attributes.position.needsUpdate = true;
 
