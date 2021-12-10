@@ -10,6 +10,7 @@ import {
   PointLight,
   SphereGeometry,
   TorusGeometry,
+  Vector2,
 } from "three";
 import { getWordPointerPosition } from "../pointer";
 import { Work } from "./types";
@@ -27,6 +28,8 @@ export class Koki1 extends Work {
   pointer: PointLight;
   geometry: TorusGeometry;
   material: Material;
+  soundEffect: HTMLAudioElement;
+  lastPointerPosition: Vector2;
 
   constructor() {
     super();
@@ -64,10 +67,25 @@ export class Koki1 extends Work {
     this.pointer = new PointLight(0xea9198, 2, 10, 1.0);
     this.pointer.position.z = -5;
     this.root.add(this.pointer);
+
+    this.soundEffect = new Audio("/audio/Koki1.mp3");
+
+    this.lastPointerPosition = getWordPointerPosition(17);
   }
 
   update() {
     const pointerPosition = getWordPointerPosition(17);
+
+    if (
+      pointerPosition.distanceTo(this.lastPointerPosition) > 0.2 &&
+      this.soundEffect.paused
+    ) {
+      this.soundEffect.currentTime = 0;
+      this.soundEffect.play();
+    }
+
+    this.lastPointerPosition = pointerPosition;
+
     this.pointer.position.x = pointerPosition.x;
     this.pointer.position.y = pointerPosition.y;
     for (const meshe of this.meshes) {

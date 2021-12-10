@@ -3,3 +3,5 @@ node_modules
 dist
 dist-ssr
 *.local
+
+public/audio/Koki1.mp3
