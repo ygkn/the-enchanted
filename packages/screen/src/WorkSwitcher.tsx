@@ -37,7 +37,7 @@ export class WorkSwitcher extends Work {
     if (this.workIndex === null) {
       this.workIndex = 0;
     } else {
-      this.workIndex += 1;
+      this.workIndex = (this.workIndex + 1) % Works.length;
     }
 
     const NewWork = Works[this.workIndex];
