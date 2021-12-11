@@ -76,6 +76,10 @@ export const listen = () => {
     }
   });
 
+  setInterval(() => {
+    socket.send(JSON.stringify({ type: "ping" }));
+  }, 1000);
+
   document.addEventListener(
     "mousemove",
     (event) => {
