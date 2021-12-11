@@ -27,6 +27,15 @@ const tick = (timestamp: number) => {
 
 tick(performance.now());
 
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && workSwitcher.workIndex === null) {
+    workSwitcher.goNextWork();
+    setInterval(() => {
+      workSwitcher.goNextWork();
+    }, 30 * 1000);
+  }
+});
+
 const onResize = () => {
   const width = window.innerWidth;
   const height = window.innerHeight;

@@ -13,19 +13,9 @@ export class WorkSwitcher extends Work {
   workIndex: number | null = null;
   shownWork: Work | null = null;
 
-  handleKeydown: (event: KeyboardEvent) => void;
-
   constructor() {
     super();
     this.root = new Group();
-
-    this.handleKeydown = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-        this.goNextWork();
-      }
-    };
-
-    document.addEventListener("keydown", this.handleKeydown);
   }
 
   goNextWork() {
@@ -53,6 +43,5 @@ export class WorkSwitcher extends Work {
 
   dispose() {
     this.shownWork?.dispose();
-    document.removeEventListener("keydown", this.handleKeydown);
   }
 }
