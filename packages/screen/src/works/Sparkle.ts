@@ -73,12 +73,12 @@ export class Sparkle extends Work {
       this.lastPointerPosition.copy(nowPointerPosition);
     }
 
-    const max = 1000 * 2;
+    const max = 1000;
 
     for (const sparkle of this.sparkles) {
       const elapsed = (timestamp - sparkle.createdAt) / max;
 
-      const scaleRate = Math.max(0, 1 - (elapsed - 1) ** 2) * 2;
+      const scaleRate = Math.max(0, 1 - (elapsed * 2 - 1) ** 2) * 2;
 
       sparkle.sprite.scale.x = scaleRate;
       sparkle.sprite.scale.y = scaleRate;
