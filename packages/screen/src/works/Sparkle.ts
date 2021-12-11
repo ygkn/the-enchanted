@@ -6,7 +6,7 @@ import {
   TextureLoader,
   Vector2,
 } from "three";
-import { getWordPointerPosition } from "../pointer";
+import { getWorldPointerPosition } from "../pointer";
 import sparkleImageUrl from "../images/sparkle.png";
 import { Work } from "./types";
 
@@ -35,12 +35,12 @@ export class Sparkle extends Work {
     this.sparkles = new Set();
 
     this.nextCreationTime = performance.now();
-    this.lastPointerPosition = getWordPointerPosition(10);
+    this.lastPointerPosition = getWorldPointerPosition(10);
     this.soundEffect = new Audio("/audio/sparkleSE.mp3");
   }
 
   update(timestamp: number) {
-    const nowPointerPosition = getWordPointerPosition(10);
+    const nowPointerPosition = getWorldPointerPosition(10);
     if (
       nowPointerPosition.distanceTo(this.lastPointerPosition) > 0.2 &&
       this.soundEffect.paused

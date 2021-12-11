@@ -11,7 +11,7 @@ import {
   TextureLoader,
   Vector2,
 } from "three";
-import { getWordPointerPosition } from "../pointer";
+import { getWorldPointerPosition } from "../pointer";
 import { Work } from "./types";
 import texture from "../images/rose-texture.png";
 
@@ -49,12 +49,12 @@ export class Rose extends Work {
     );
 
     this.nextCreationTime = performance.now();
-    this.lastPointerPosition = getWordPointerPosition(30);
+    this.lastPointerPosition = getWorldPointerPosition(30);
     this.particles = new Set();
   }
 
   update(timestamp: number) {
-    const nowPointerPosition = getWordPointerPosition(30);
+    const nowPointerPosition = getWorldPointerPosition(30);
 
     if (
       this.nextCreationTime < timestamp &&

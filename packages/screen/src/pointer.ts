@@ -35,7 +35,7 @@ type MessageObject =
       uid: string;
     };
 
-export const getWordPointerPosition = (depth: number): Vector2 => {
+export const getWorldPointerPosition = (depth: number): Vector2 => {
   const position = new Vector2();
   position.copy(useMouse ? mouseCoords : deviceCoords);
 

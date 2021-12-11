@@ -8,7 +8,7 @@ import {
   TextureLoader,
   Vector2,
 } from "three";
-import { getWordPointerPosition } from "../pointer";
+import { getWorldPointerPosition } from "../pointer";
 import { Work } from "./types";
 import circleImage from "../images/texture-circle.png";
 
@@ -73,7 +73,7 @@ export class EscapingParticle extends Work {
   }
 
   update() {
-    const pointerPosition = getWordPointerPosition(10);
+    const pointerPosition = getWorldPointerPosition(10);
 
     const positions = this.dots.geometry.attributes.position.array;
 

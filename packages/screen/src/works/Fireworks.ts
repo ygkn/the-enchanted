@@ -12,7 +12,7 @@ import {
   TextureLoader,
   Vector3,
 } from "three";
-import { getWordPointerPosition } from "../pointer";
+import { getWorldPointerPosition } from "../pointer";
 import fireworksAlphaTextureImage from "../images/fireworks-alpha-texture.png";
 import { Work } from "./types";
 
@@ -122,12 +122,12 @@ export class Fireworks extends Work {
   }
 
   update(timestamp: number) {
-    if (getWordPointerPosition(10).y > 4 && !this.lastCreated) {
+    if (getWorldPointerPosition(10).y > 4 && !this.lastCreated) {
       this.addFirework(timestamp);
 
       this.lastCreated = true;
     }
-    if (getWordPointerPosition(10).y < 0) {
+    if (getWorldPointerPosition(10).y < 0) {
       this.lastCreated = false;
     }
 

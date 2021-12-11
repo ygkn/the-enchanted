@@ -11,7 +11,7 @@ import {
   TorusGeometry,
   Vector2,
 } from "three";
-import { getWordPointerPosition } from "../pointer";
+import { getWorldPointerPosition } from "../pointer";
 import { Work } from "./types";
 
 const geometries = [
@@ -67,11 +67,11 @@ export class Koki1 extends Work {
 
     this.soundEffect = new Audio("/audio/Koki1.mp3");
 
-    this.lastPointerPosition = getWordPointerPosition(17);
+    this.lastPointerPosition = getWorldPointerPosition(17);
   }
 
   update() {
-    const pointerPosition = getWordPointerPosition(17);
+    const pointerPosition = getWorldPointerPosition(17);
 
     if (
       pointerPosition.distanceTo(this.lastPointerPosition) > 0.2 &&
