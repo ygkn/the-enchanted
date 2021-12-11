@@ -77,6 +77,9 @@ export const listen = () => {
   });
 
   setInterval(() => {
+    if (socket.readyState !== WebSocket.OPEN) {
+      return;
+    }
     socket.send(JSON.stringify({ type: "ping" }));
   }, 1000);
 
