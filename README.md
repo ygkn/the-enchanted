@@ -17,13 +17,10 @@
 
 ### Preparation
 
-Clone this repository.
+1. Clone this repository.
+2. Put sound effect audio file in public/audio
+3. Install dependencies with `yarn` command on **repository root**.
 
-Then, install dependencies with yarn on **repository root**.
-
-```sh
-yarn
-```
 
 ### Run
 
